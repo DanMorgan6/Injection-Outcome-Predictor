@@ -1,14 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Knee OA Injection Outcome Predictor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <title>Knee OA Injection Outcome Predictor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.25rem;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+    }
+    h3 {
+      margin: 0.3rem 0;
+      font-size: 1rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    @media (min-width: 700px) {
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.45rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+    .btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn:active {
+      opacity: 0.85;
+    }
+    .result-card {
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .cs { border-left: 4px solid #2563eb; }
+    .ha { border-left: 4px solid #059669; }
+    .gel { border-left: 4px solid #7c3aed; }
+
+    .band-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+    .band-high    { background:#bbf7d0; color:#166534; }
+    .band-mod     { background:#fef9c3; color:#854d0e; }
+    .band-lowmod  { background:#fee2e2; color:#b91c1c; }
+    .band-unlikely{ background:#e5e7eb; color:#374151; }
+
+    .warning {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background:#fee2e2;
+      color:#991b1b;
+    }
+    .small {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    footer {
+      margin: 1.5rem 0 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+  </style>
 </head>
 <body>
-<h1>Knee OA Injection Predictor</h1>
-<p>App files prepared for GitHub Pages hosting.</p>
+<div class="app">
+  <h1>Knee OA Injection Outcome Predictor</h1>
+  <p class="small">
+    Predicts short-, mid-, and long-term outcomes for corticosteroid, hyaluronic acid, and hydrogel injections in knee osteoarthritis.
+  </p>
+
+  <div class="card">
+    <h2>Clinical Inputs</h2>
+    <div class="grid grid-2">
+      <div>
+        <label for="age">Age (years)</label>
+        <input type="number" id="age" min="18" max="100" />
+      </div>
+      <div>
+        <label for="kl">KL Grade (1–4)</label>
+        <input type="number" id="kl" min="1" max="4" />
+      </div>
+      <div>
+        <label for="bmi">BMI (kg/m²)</label>
+        <input type="number" id="bmi" step="0.1" />
+      </div>
+      <div>
+        <label for="vas">VAS Pain (0–100)</label>
+        <input type="number" id="vas" min="0" max="100" />
+      </div>
+      <div>
+        <label for="synovitis">Synovitis</label>
+        <select id="synovitis">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="effusion">Effusion</label>
+        <select id="effusion">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="malalign">Malalignment &gt;5°</label>
+        <select id="malalign">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="quadweak">Quadriceps weakness</label>
+        <select id="quadweak">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="metabolic">Metabolic comorbidity</label>
+        <select id="metabolic">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="psych">Psychosocial high risk</label>
+        <select id="psych">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="prior">Prior positive response</label>
+        <select id="prior">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+          <option value="First">First injection</option>
+        </select>
+      </div>
+      <div>
+        <label for="nutr">Nutritional risk</label>
+        <select id="nutr">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="guided">Image-guided injection</label>
+        <select id="guided">
+          <option value="">--</option>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+      </div>
+      <div>
+        <label for="cs12">CS injections last 12 months</label>
+        <input type="number" id="cs12" min="0" />
+      </div>
+      <div>
+        <label for="cslife">CS injections lifetime</label>
+        <input type="number" id="cslife" min="0" />
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculate()">Calculate predictions</button>
+
+    <div id="warning" class="warning" style="display:none;"></div>
+  </div>
+
+  <div id="results" style="margin-top:1rem;"></div>
+
+  <footer>
+    Knee OA Injection Outcome Predictor – for clinical decision support only. Does not replace clinical judgement.
+  </footer>
+</div>
+
 <script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('service-worker.js').catch(function(err){
+        console.log('SW registration failed', err);
+      });
+    });
+  }
+</script>
 </body>
 </html>
