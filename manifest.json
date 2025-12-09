@@ -1,9 +1,15 @@
 {
-  "name": "Knee OA Injection Outcome Predictor",
+  "name": "Knee OA Injection Predictor",
   "short_name": "KneeOA",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "icons": []
+  "background_color": "#f8fbff",
+  "theme_color": "#1e90ff",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
