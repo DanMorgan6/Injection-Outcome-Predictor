@@ -1,56 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Knee OA Injection Outcome Predictor</title>
-<link rel="manifest" href="manifest.json">
-<style>
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #f8fbff;
-  background-image: linear-gradient(#e0efff 1px, transparent 1px),
-                    linear-gradient(90deg, #e0efff 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-.header {
-  text-align: center;
-  padding: 1rem;
-}
-.header img {
-  width: 140px;
-  border-radius: 50%;
-}
-.title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-top: 0.5rem;
-}
-.app {
-  max-width: 900px;
-  margin: auto;
-  padding: 1rem;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Knee OA Injection Outcome Predictor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8fbff;
+      background-image: linear-gradient(#e0efff 1px, transparent 1px),
+                        linear-gradient(90deg, #e0efff 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .header {
+      text-align: center;
+      padding: 1.2rem 1rem 0.5rem;
+    }
+    .header img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: contain;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+      background: #ffffff;
+    }
+    .brand-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+      color: #6b7280;
+    }
+    .title {
+      font-size: 1.4rem;
+      margin-top: 0.15rem;
+      font-weight: 700;
+      color: #111827;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-top: 0.15rem;
+    }
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem 1.5rem;
+    }
+    .card {
+      background: rgba(255,255,255,0.96);
+      border-radius: 16px;
+      padding: 1rem;
+      margin-top: 0.75rem;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+      backdrop-filter: blur(8px);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    @media (min-width: 700px) {
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+    label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.2rem;
+      color: #374151;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.45rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      background: #ffffff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+    }
+    .primary-btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #2563eb;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .primary-btn span.icon {
+      font-size: 1.1rem;
+    }
+    .primary-btn:active {
+      opacity: 0.9;
+    }
+    .btn-secondary {
+      margin-top: 0.75rem;
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #374151;
+    }
+    .result-card {
+      border-radius: 16px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid #e5e7eb;
+    }
+    .cs { border-left: 4px solid #2563eb; }
+    .ha { border-left: 4px solid #059669; }
+    .gel { border-left: 4px solid #7c3aed; }
+
+    .band-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+    .band-high    { background:#bbf7d0; color:#166534; }
+    .band-mod     { background:#fef9c3; color:#854d0e; }
+    .band-lowmod  { background:#fee2e2; color:#b91c1c; }
+    .band-unlikely{ background:#e5e7eb; color:#374151; }
+
+    .warning {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      padding: 0.5rem;
+      border-radius: 10px;
+      background:#fee2e2;
+      color:#991b1b;
+      border: 1px solid #fecaca;
+    }
+    .small {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    footer {
+      margin: 1.5rem 0 0.75rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="header">
+    <img src="logo.png" alt="The Complete Practitioner logo">
+    <div class="brand-title">The Complete Practitioner</div>
+    <div class="title">Knee OA Injection Outcome Predictor</div>
+    <div class="subtitle">Decision support for CS, HA and hydrogel injections – short, mid & long term.</div>
+  </div>
 
-<div class="header">
-  <img src="logo.png" alt="Logo">
-  <div class="title">Knee OA Injection Outcome Predictor</div>
-</div>
+  <div class="app">
+    <button id="startBtn" class="primary-btn">
+      <span class="icon">▶</span>
+      <span>Start assessment</span>
+    </button>
 
-<div class="app">
-  <p>This is the branded version shell. Your full calculator UI will appear here when merged.</p>
-</div>
+    <div id="formCard" class="card hidden">
+      <h2 style="margin-top:0;">Clinical Inputs</h2>
+      <p class="small">Enter knee-specific clinical data to generate predicted outcomes.</p>
+      <div class="grid grid-2">
+        <div>
+          <label for="age">Age (years)</label>
+          <input type="number" id="age" min="18" max="100" />
+        </div>
+        <div>
+          <label for="kl">KL Grade (1–4)</label>
+          <input type="number" id="kl" min="1" max="4" />
+        </div>
+        <div>
+          <label for="bmi">BMI (kg/m²)</label>
+          <input type="number" id="bmi" step="0.1" />
+        </div>
+        <div>
+          <label for="vas">VAS Pain (0–100)</label>
+          <input type="number" id="vas" min="0" max="100" />
+        </div>
+        <div>
+          <label for="synovitis">Synovitis</label>
+          <select id="synovitis">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="effusion">Effusion</label>
+          <select id="effusion">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="malalign">Malalignment &gt;5°</label>
+          <select id="malalign">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="quadweak">Quadriceps weakness</label>
+          <select id="quadweak">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="metabolic">Metabolic comorbidity</label>
+          <select id="metabolic">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="psych">Psychosocial high risk</label>
+          <select id="psych">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="prior">Prior positive response</label>
+          <select id="prior">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+            <option value="First">First injection</option>
+          </select>
+        </div>
+        <div>
+          <label for="nutr">Nutritional risk</label>
+          <select id="nutr">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="guided">Image-guided injection</label>
+          <select id="guided">
+            <option value="">--</option>
+            <option value="Y">Y</option>
+            <option value="N">N</option>
+          </select>
+        </div>
+        <div>
+          <label for="cs12">CS injections last 12 months</label>
+          <input type="number" id="cs12" min="0" />
+        </div>
+        <div>
+          <label for="cslife">CS injections lifetime</label>
+          <input type="number" id="cslife" min="0" />
+        </div>
+      </div>
 
-<script src="app.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
-</script>
+      <button class="btn-secondary" id="calcBtn">Calculate predictions</button>
 
+      <div id="warning" class="warning" style="display:none;"></div>
+    </div>
+
+    <div id="results" style="margin-top:1rem;"></div>
+
+    <footer>
+      The Complete Practitioner – Knee OA Injection Outcome Predictor · Clinical decision support only – does not replace clinical judgement.
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js').catch(function(err){
+          console.log('SW registration failed', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
