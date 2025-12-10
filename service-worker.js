@@ -1,4 +1,4 @@
-const CACHE_NAME = 'knee-oa-cache-v2';
+const CACHE_NAME = 'knee-oa-cache-v3';
 const URLS_TO_CACHE = [
   'index.html',
   'app.js',
