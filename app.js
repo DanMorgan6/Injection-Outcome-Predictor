@@ -37,7 +37,6 @@ function calculatePredictions() {
   const diabetes = document.getElementById('diabetes').value;
   const glaucoma = document.getElementById('glaucoma').value;
 
-  // Amber warnings for diabetes and glaucoma
   const amber = document.getElementById('amberWarning');
   amber.style.display = 'none';
   amber.innerHTML = '';
@@ -47,25 +46,22 @@ function calculatePredictions() {
   if (diabetes === 'Y') {
     riskFlag = true;
     amber.style.display = 'block';
-    amber.innerHTML += "⚠ This patient has diabetes. Corticosteroid injections may destabilise blood glucose for up to 1–2 weeks. Monitor closely or consider a non-steroid option.<br>";
+    amber.innerHTML += '⚠ This patient has diabetes. Corticosteroid injections may destabilise blood glucose for up to 1–2 weeks. Monitor closely or consider a non-steroid option.<br>';
   }
   if (glaucoma === 'Y') {
     riskFlag = true;
     amber.style.display = 'block';
-    amber.innerHTML += "⚠ This patient has glaucoma. Corticosteroids can increase intra-ocular pressure – consider non-steroid options or seek ophthalmology advice.<br>";
+    amber.innerHTML += '⚠ This patient has glaucoma. Corticosteroids can increase intra-ocular pressure – consider non-steroid options or seek ophthalmology advice.<br>';
   }
 
-  // CS exposure warning
   const csWarning = document.getElementById('csWarning');
   csWarning.style.display = 'none';
   if (cs12 >= 3 || cslife >= 5) {
     csWarning.style.display = 'block';
-    csWarning.textContent = "High corticosteroid exposure – reconsider further steroid use and emphasise alternatives.";
+    csWarning.textContent = 'High corticosteroid exposure – reconsider further steroid use and emphasise alternatives.';
   }
 
-  // Global score S
   let AgeScore = age < 60 ? 1 : (age < 75 ? 0 : -1);
-
   let KLScore;
   if (kl <= 2) KLScore = 3;
   else if (kl === 3) KLScore = 1;
@@ -103,7 +99,6 @@ function calculatePredictions() {
             BMIScore + QuadScore + MetScore + PsychScore + PriorScore +
             NutrScore + IGScore + CSloadScore;
 
-  // Helper categories
   let KLcat;
   if (kl <= 2) KLcat = 1;
   else if (kl === 3) KLcat = 0;
@@ -119,17 +114,12 @@ function calculatePredictions() {
   const priorPosFlag = (prior === 'Y') ? 1 : 0;
   const malFlag = yn(mal);
 
-  // Treatment-specific indices
-
-  // Corticosteroid
   const CS_short = S + 4 * synFlag + 1 * effFlag + 1 * priorPosFlag - 1 * CSloadCat;
   const CS_mid   = S + 2 * synFlag - 1 * CSloadCat - 1;
 
-  // Hyaluronic Acid
   const HA_short = S + 1 * effFlag;
   const HA_mid   = S + 3 * KLcat + 1 * effFlag - (CSloadCat >= 2 ? 1 : 0);
 
-  // Gel / Hydrogel
   const Gel_short = S;
   const Gel_mid   = S
                   + 2 * KLcat
@@ -147,7 +137,6 @@ function calculatePredictions() {
       2 * (kl === 4 ? 1 : 0) -
       2 * (malFlag ? 1 : 0);
 
-  // Bands
   const CS_short_band = bandShortMid(CS_short);
   const CS_mid_band   = bandShortMid(CS_mid);
   const HA_short_band = bandShortMid(HA_short);
@@ -156,8 +145,7 @@ function calculatePredictions() {
   const Gel_mid_band  = bandShortMid(Gel_mid);
   const Gel_long_band = bandLong(Gel_long);
 
-  // Preferred label & class for HA / Gel when diabetes or glaucoma present
-  const preferredClass = riskFlag ? " preferred" : "";
+  const preferredClass = riskFlag ? ' preferred' : '';
   const haPreferredNote = riskFlag
     ? "<p class='small'><strong>Preferred:</strong> Favour HA over CS in diabetes/glaucoma to avoid systemic steroid effects.</p>"
     : "<p class='small'>Mid-term benefit favoured in KL1–3 with effusion and lower cumulative CS exposure.</p>";
@@ -169,7 +157,6 @@ function calculatePredictions() {
     ? "<p class='small'><strong>Caution:</strong> Diabetes/glaucoma present – if using corticosteroid, counsel carefully and monitor.</p>"
     : "<p class='small'>Best for synovitic flares and rapid symptom relief. Penalised by high CS load.</p>";
 
-  // Render results
   const res = document.getElementById('results');
   res.innerHTML = `
     <div class="card">
@@ -218,10 +205,38 @@ function calculatePredictions() {
   `;
 }
 
+function resetForm() {
+  const ids = [
+    'age','kl','bmi','vas',
+    'synovitis','effusion','malalign','quadweak',
+    'metabolic','psych','diabetes','glaucoma',
+    'prior','nutr','guided',
+    'cs12','cslife'
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      el.value = '';
+    } else {
+      el.value = '';
+    }
+  });
+  const amber = document.getElementById('amberWarning');
+  const csWarning = document.getElementById('csWarning');
+  const results = document.getElementById('results');
+  if (amber) { amber.style.display = 'none'; amber.innerHTML = ''; }
+  if (csWarning) { csWarning.style.display = 'none'; csWarning.innerHTML = ''; }
+  if (results) { results.innerHTML = ''; }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const startBtn = document.getElementById('startBtn');
   const formCard = document.getElementById('formCard');
   const calcBtn = document.getElementById('calcBtn');
+  const printBtn = document.getElementById('printBtn');
+  const resetFab = document.getElementById('resetFab');
+  const darkToggle = document.getElementById('darkToggle');
 
   if (startBtn && formCard) {
     startBtn.addEventListener('click', function() {
@@ -233,6 +248,25 @@ document.addEventListener('DOMContentLoaded', function() {
   if (calcBtn) {
     calcBtn.addEventListener('click', function() {
       calculatePredictions();
+    });
+  }
+
+  if (printBtn) {
+    printBtn.addEventListener('click', function() {
+      // Use browser print to allow "Save as PDF"
+      window.print();
+    });
+  }
+
+  if (resetFab) {
+    resetFab.addEventListener('click', function() {
+      resetForm();
+    });
+  }
+
+  if (darkToggle) {
+    darkToggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark');
     });
   }
 });

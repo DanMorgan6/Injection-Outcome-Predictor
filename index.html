@@ -7,6 +7,9 @@
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="manifest.json">
   <style>
+    :root {
+      color-scheme: light dark;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -15,6 +18,15 @@
       background-image: linear-gradient(#e0efff 1px, transparent 1px),
                         linear-gradient(90deg, #e0efff 1px, transparent 1px);
       background-size: 40px 40px;
+      color: #111827;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    body.dark {
+      background: #020617;
+      background-image: linear-gradient(#1e293b 1px, transparent 1px),
+                        linear-gradient(90deg, #1e293b 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: #e5e7eb;
     }
     .header {
       text-align: center;
@@ -28,6 +40,10 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.09);
       background: #ffffff;
     }
+    body.dark .header img {
+      background: #020617;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.7);
+    }
     .brand-title {
       font-size: 0.8rem;
       letter-spacing: 0.08em;
@@ -35,21 +51,30 @@
       margin-top: 0.5rem;
       color: #6b7280;
     }
+    body.dark .brand-title {
+      color: #9ca3af;
+    }
     .title {
       font-size: 1.4rem;
       margin-top: 0.15rem;
       font-weight: 700;
       color: #111827;
     }
+    body.dark .title {
+      color: #e5e7eb;
+    }
     .subtitle {
       font-size: 0.85rem;
       color: #4b5563;
       margin-top: 0.15rem;
     }
+    body.dark .subtitle {
+      color: #9ca3af;
+    }
     .app {
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 1rem 1.5rem;
+      padding: 0 1rem 3.5rem;
     }
     .card {
       background: rgba(255,255,255,0.96);
@@ -58,6 +83,11 @@
       margin-top: 0.75rem;
       box-shadow: 0 10px 30px rgba(15,23,42,0.08);
       backdrop-filter: blur(8px);
+    }
+    body.dark .card {
+      background: rgba(15,23,42,0.96);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      border: 1px solid #1f2937;
     }
     .grid {
       display: grid;
@@ -79,6 +109,9 @@
       margin-bottom: 0.2rem;
       color: #374151;
     }
+    body.dark label {
+      color: #e5e7eb;
+    }
     input, select {
       width: 100%;
       box-sizing: border-box;
@@ -87,11 +120,21 @@
       border: 1px solid #d1d5db;
       font-size: 0.9rem;
       background: #ffffff;
+      color: #111827;
+    }
+    body.dark input, body.dark select {
+      background: #020617;
+      border-color: #4b5563;
+      color: #e5e7eb;
     }
     input:focus, select:focus {
       outline: none;
       border-color: #2563eb;
       box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+    }
+    body.dark input:focus, body.dark select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 1px rgba(96,165,250,0.4);
     }
     .primary-btn {
       margin-top: 1rem;
@@ -127,6 +170,38 @@
       color: #374151;
       cursor: pointer;
     }
+    body.dark .btn-secondary {
+      background: #020617;
+      border-color: #4b5563;
+      color: #e5e7eb;
+    }
+    .toolbar {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .toolbar button {
+      flex: 1 1 48%;
+    }
+    .toggle-dark {
+      position: fixed;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 40;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      cursor: pointer;
+    }
+    body.dark .toggle-dark {
+      background: #020617;
+      color: #e5e7eb;
+      border-color: #4b5563;
+    }
     .result-card {
       border-radius: 16px;
       padding: 0.75rem;
@@ -134,13 +209,18 @@
       font-size: 0.9rem;
       border: 1px solid #e5e7eb;
     }
+    body.dark .result-card {
+      border-color: #374151;
+    }
     .cs { border-left: 4px solid #2563eb; }
     .ha { border-left: 4px solid #059669; }
     .gel { border-left: 4px solid #7c3aed; }
     .preferred {
       box-shadow: 0 0 0 2px #bbf7d0;
     }
-
+    body.dark .preferred {
+      box-shadow: 0 0 0 2px #22c55e;
+    }
     .band-pill {
       display: inline-block;
       padding: 0.1rem 0.5rem;
@@ -153,7 +233,10 @@
     .band-mod     { background:#fef9c3; color:#854d0e; }
     .band-lowmod  { background:#fee2e2; color:#b91c1c; }
     .band-unlikely{ background:#e5e7eb; color:#374151; }
-
+    body.dark .band-high    { background:#166534; color:#bbf7d0; }
+    body.dark .band-mod     { background:#854d0e; color:#fef9c3; }
+    body.dark .band-lowmod  { background:#7f1d1d; color:#fee2e2; }
+    body.dark .band-unlikely{ background:#4b5563; color:#e5e7eb; }
     .warning {
       margin-top: 0.5rem;
       font-size: 0.85rem;
@@ -162,6 +245,11 @@
       background:#fee2e2;
       color:#991b1b;
       border: 1px solid #fecaca;
+    }
+    body.dark .warning {
+      background:#7f1d1d;
+      color:#fee2e2;
+      border-color:#b91c1c;
     }
     .amber {
       margin-top: 0.5rem;
@@ -172,9 +260,17 @@
       color:#854d0e;
       border: 1px solid #fde047;
     }
+    body.dark .amber {
+      background:#854d0e;
+      color:#fef9c3;
+      border-color:#eab308;
+    }
     .small {
       font-size: 0.8rem;
       color: #6b7280;
+    }
+    body.dark .small {
+      color: #9ca3af;
     }
     footer {
       margin: 1.5rem 0 0.75rem;
@@ -182,17 +278,56 @@
       font-size: 0.75rem;
       color: #9ca3af;
     }
+    body.dark footer {
+      color: #6b7280;
+    }
     .hidden {
       display: none;
+    }
+    .reset-fab {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(239,68,68,0.5);
+      cursor: pointer;
+      z-index: 30;
+    }
+    body.dark .reset-fab {
+      background:#b91c1c;
+      box-shadow: 0 10px 25px rgba(127,29,29,0.9);
+    }
+    @media print {
+      .toggle-dark,
+      #startBtn,
+      .reset-fab,
+      .toolbar button#printBtn {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+        background-image: none;
+      }
     }
   </style>
 </head>
 <body>
+  <button id="darkToggle" class="toggle-dark">Dark mode</button>
+
   <div class="header">
     <img src="logo.png" alt="The Complete Practitioner logo">
     <div class="brand-title">The Complete Practitioner</div>
     <div class="title">Knee OA Injection Outcome Predictor</div>
-    <div class="subtitle">Decision support for CS, HA and hydrogel injections – short, mid & long term.</div>
+    <div class="subtitle">Decision support for CS, HA and hydrogel injections – short, mid &amp; long term.</div>
   </div>
 
   <div class="app">
@@ -330,7 +465,10 @@
         </div>
       </div>
 
-      <button class="btn-secondary" id="calcBtn">Calculate predictions</button>
+      <div class="toolbar">
+        <button class="btn-secondary" id="calcBtn">Calculate predictions</button>
+        <button class="btn-secondary" id="printBtn">Share / Export as PDF</button>
+      </div>
 
       <div id="amberWarning" class="amber" style="display:none;"></div>
       <div id="csWarning" class="warning" style="display:none;"></div>
@@ -342,6 +480,8 @@
       The Complete Practitioner – Knee OA Injection Outcome Predictor · Clinical decision support only – does not replace clinical judgement.
     </footer>
   </div>
+
+  <button id="resetFab" class="reset-fab" title="Reset form">↺</button>
 
   <script src="app.js"></script>
   <script>
